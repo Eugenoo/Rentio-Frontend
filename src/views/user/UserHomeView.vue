@@ -1,11 +1,9 @@
 <template>
-$END$
+
 </template>
 
-<script>
-export default {
-name: "UserHomeView.vue"
-}
+<script setup>
+
 </script>
 
 <style scoped>
