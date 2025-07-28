@@ -8,17 +8,14 @@
         {{ car.model }}
       </p>
       <div>
-        <img class="-right-30 mt-10 absolute top-0 object-cover" src="../../public/carImages/hyundai_ioniq_5.png" />
+        <img class="-right-30 mt-10 absolute top-0 object-cover" :src="car.photo" />
       </div>
     </div>
   </router-link>
-
 </template>
 
 <script setup>
-defineProps(['car']);
+defineProps(['car'])
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -9,12 +9,21 @@
 
 <script setup>
 import CarComponent from "@/components/CarComponent.vue";
+import { onMounted } from 'vue'
+import axios from 'axios'
+import { ref } from 'vue'
 
+const cars = ref();
 
+onMounted(async() => {
 
-const cars = [
-    { id:1, brand: 'Hyundai', model: 'Ioniq 5', slug: 'ioniq-5', current: true, route: '/' },
-    { id:2, brand: 'Hyundai', model: 'Santa Fe', slug: 'santa-fe', current: true, route: '/' },
-    { id:3, brand: 'Hyundai', model: 'Ioniq 6', slug: 'ioniq-6', current: true, route: '/' },
-  ]
+  try {
+    const res = await axios.get('http://127.0.0.1:8000/api/car')
+    cars.value = res.data
+    console.log(res.data)
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 </script>
