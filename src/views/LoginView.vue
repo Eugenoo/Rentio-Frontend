@@ -1,11 +1,10 @@
 <template>
 login
+<AuthComponent></AuthComponent>
 </template>
 
-<script>
-export default {
-  name: "LoginView"
-}
+<script setup>
+import AuthComponent from "../components/Auth/AuthComponent.vue"
 </script>
 
 <style scoped>
