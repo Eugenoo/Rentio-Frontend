@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from "@/views/LoginView.vue"
 import AboutView from "@/views/AboutView.vue"
 import CarView from '@/views/car/CarView.vue'
+import AdminHomeView from "@/views/admin/AdminHomeView.vue";
+import AdminManageView from "@/views/admin/AdminManageView.vue";
+import {useAuthStore} from "@/stores/auth.js";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,7 +33,28 @@ const router = createRouter({
       name: 'carDetails',
       component: CarView,
     },
+    {
+      path: '/panel',
+      name: 'panel',
+      component: AdminHomeView,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/admin/manage',
+      name: 'adminManage',
+      component: AdminManageView,
+      meta: {requiresAuth: true}
+    },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore();
+
+  if(to.meta.requiresAuth && !authStore.token) {
+    return next({name: 'login'});
+  }
+  next();
 })
 
 export default router
