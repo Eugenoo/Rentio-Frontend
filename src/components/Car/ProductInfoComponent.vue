@@ -1,5 +1,6 @@
 <template>
   <slot></slot>
+  huj a nie info
 </template>
 
 <script setup>

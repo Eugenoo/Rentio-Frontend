@@ -72,7 +72,7 @@
                class="p-3.5 xl:aspect-auto lg:h-28 border-b border-r border-gray-200 flex justify-between flex-col max-lg:items-center min-h-[70px] transition-all duration-300 hover:bg-gray-100"
                :class="{
                   'bg-gray-50': !day.isCurrentMonth,
-                  'bg-red-200': day.reserved
+                  'bg-red-200': day.isReserved
                }"
           >
               <span class="text-xs font-semibold flex items-center justify-center w-7 h-7 rounded-full"
@@ -99,20 +99,65 @@
   const daysOfMonth = ref();
   const firstDayOfMonth = ref();
   const daysInPrevMonth = ref();
+  const reserved = ref(false);
+  const currentYear = ref(null);
+  const currentMonth = ref(null);
+  const displayedMonth = ref();
+  const displayedYear = ref(currentYear.value);
 
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const firstDayIndex = ref(0);
 
+  //Helper Function
+  function getDatesBetween(start, end) {
+    const days = [];
+    const currentDate = new Date(start);
+    const endDate = new Date(end);
+
+    while (currentDate <= endDate) {
+      days.push(currentDate.toISOString().split('T')[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return days;
+  }
+
+
   const fetchCalendarData = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/callendar')
-      monthAndDay.value = res.data.monthAndDay
-      currentDay.value = parseInt(res.data.currentDay)
-      daysOfMonth.value = res.data.daysOfTheMonth
-      firstDayOfMonth.value = res.data.firstDayOfMonth
-      daysInPrevMonth.value = res.data.daysInPrevMonth
-      firstDayIndex.value = weekDays.findIndex(d => d===firstDayOfMonth.value
-      );
+      const [calendarRes, reservationRes] = await Promise.all([
+        axios.get('http://127.0.0.1:8000/api/callendar'),
+        axios.get('http://127.0.0.1:8000/api/car/2/reservations') // second endpoint
+      ]);
+
+
+      monthAndDay.value = calendarRes.data.monthAndDay
+      currentMonth.value = calendarRes.data.currentMonth;
+      currentYear.value = calendarRes.data.currentYear;
+      currentDay.value = parseInt(calendarRes.data.currentDay)
+      daysOfMonth.value = calendarRes.data.daysOfTheMonth
+      firstDayOfMonth.value = calendarRes.data.firstDayOfMonth
+      daysInPrevMonth.value = calendarRes.data.daysInPrevMonth
+      firstDayIndex.value = weekDays.findIndex(d => d===firstDayOfMonth.value);
+      displayedMonth.value = currentMonth.value;
+      displayedYear.value = currentYear.value;
+
+
+      console.log(reservationRes.data);
+      // reserved day handler
+
+
+      let reservedDays = [];
+
+      reservationRes.data.forEach(res => {
+        const days = getDatesBetween(res.start_date, res.end_date);
+        reservedDays = reservedDays.concat(days);
+      });
+
+      // Remove duplicates
+      reservedDays = [...new Set(reservedDays)];
+      reserved.value = reservedDays;
+      console.log(reservedDays);
     } catch (error) {
       console.error('Failed to fetch calendar data:', error)
     }
@@ -138,15 +183,28 @@
         isCurrentMonth: false
       })
     }
-    console.log(currentDay.value)
     //Current month days
+
+    console.log(reserved.value);
+
     for (let i=1; i<= daysOfMonth.value; i++) {
+      const dayStr = i.toString().padStart(2, '0');
+      const monthStr = displayedMonth.value.toString().padStart(2, '0');
+      const dateStr = `${displayedYear.value}-${monthStr}-${dayStr}`;
+      console.log(dateStr)
+      const isReserved = reserved.value.includes(dateStr)
+
       days.push({
         day: i,
         isCurrentMonth: true,
-        isToday: i === currentDay.value
+        isToday: i === currentDay.value,
+        //   displayedMonth.value === currentMonth.value &&
+        //   displayedYear.value === currentYear.value,
+        isReserved: isReserved,
       });
     }
+
+    console.log(days);
 
     // Fill with the days from next month
     const total = days.length;
@@ -181,11 +239,18 @@
       daysInPrevMonth.value = res.data.daysInPrevMonth
       firstDayIndex.value = weekDays.indexOf(firstDayOfMonth.value)
 
+      if (displayedMonth.value === 11) {
+        displayedMonth.value = 0;
+        displayedYear.value++;
+      } else {
+        displayedMonth.value++;
+      }
+
+
     } catch (error) {
       console.error("Błąd przy pobieraniu danych kalendarza:", error);
     }
   }
-
   async function prevMonth(test) {
     const [month, year] = test.split(" "); // Dzieli "Aug 2025" na ["Aug", "2025"]
 
@@ -204,6 +269,13 @@
       firstDayOfMonth.value = res.data.firstDayOfMonth
       daysInPrevMonth.value = res.data.daysInPrevMonth
       firstDayIndex.value = weekDays.indexOf(firstDayOfMonth.value)
+
+      if (displayedMonth.value === 0) {
+        displayedMonth.value = 11;
+        displayedYear.value--;
+      } else {
+        displayedMonth.value--;
+      }
 
     } catch (error) {
       console.error("Błąd przy pobieraniu danych kalendarza:", error);
