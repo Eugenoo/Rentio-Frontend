@@ -68,11 +68,13 @@
 
         <div class="grid grid-cols-7 divide-gray-200">
           <div v-for="(day, index) in calendarDays"
+               @click = "selectDate(day)"
                :key="index"
                class="p-3.5 xl:aspect-auto lg:h-28 border-b border-r border-gray-200 flex justify-between flex-col max-lg:items-center min-h-[70px] transition-all duration-300 hover:bg-gray-100"
                :class="{
-                  'bg-gray-50': !day.isCurrentMonth,
-                  'bg-red-200': day.isReserved
+                  'bg-gray-50 hover:bg-gray-150': !day.isCurrentMonth,
+                  'bg-red-200 hover:bg-red-300': day.isReserved,
+                  'bg-green-300 hover:bg-green-400': isDateSelected(day.date),
                }"
           >
               <span class="text-xs font-semibold flex items-center justify-center w-7 h-7 rounded-full"
@@ -93,6 +95,7 @@
 <script setup>
   import axios from "axios";
   import {onMounted, ref, computed} from "vue";
+  import { useRoute } from 'vue-router';
 
   const monthAndDay = ref();
   const currentDay = ref();
@@ -103,32 +106,83 @@
   const currentYear = ref(null);
   const currentMonth = ref(null);
   const displayedMonth = ref();
-  const displayedYear = ref(currentYear.value);
-
+  const displayedYear = ref();
+  const selectedStart = ref(null);
+  const selectedEnd = ref(null);
+  const isCalendarReady = ref(false);
+  const testing = ref();
   const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const firstDayIndex = ref(0);
 
   //Helper Function
   function getDatesBetween(start, end) {
     const days = [];
-    const currentDate = new Date(start);
-    const endDate = new Date(end);
+    const firstDate = new Date(start);
+    const secondDate = new Date(end);
 
-    while (currentDate <= endDate) {
-      days.push(currentDate.toISOString().split('T')[0]);
-      currentDate.setDate(currentDate.getDate() + 1);
+    while (firstDate <= secondDate) {
+      days.push(firstDate.toISOString().split('T')[0]);
+      firstDate.setDate(firstDate.getDate() + 1);
     }
-
     return days;
   }
 
+  const isDateSelected = (dateStr) => {
+    if (!selectedStart.value || !selectedEnd.value) return false;
+      const date = new Date(dateStr);
+      const start = new Date(selectedStart.value);
+      const end = new Date(selectedEnd.value);
+      return date >= start && date <= end;
+  }
+
+  const selectDate = (day) => {
+    if (!day.isCurrentMonth) return;  //date of next and prev month is undefined
+    if (!isCalendarReady.value) return;
+    //clicked date handler
+    const clickedDateString = day.day+ " " + monthAndDay.value;
+
+    const date = new Date(clickedDateString);
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); ;
+    const clickedDay = String(date.getDate()).padStart(2, '0');
+
+    const clickedDate = `${year}-${month}-${clickedDay}`;
+
+    console.log(day.date);
+    testing.value = clickedDate;
+
+    if (!selectedStart.value || (selectedStart.value && selectedEnd.value)) {
+      selectedStart.value = clickedDate;
+      selectedEnd.value = null;
+    } else if (selectedStart.value && !selectedEnd.value) {
+      const start = new Date(selectedStart.value);
+      const end = new Date(clickedDate);
+
+      if (end >= start) {
+        selectedEnd.value = clickedDate;
+      } else {
+        selectedEnd.value = selectedStart.value;
+        selectedStart.value = clickedDate;
+      }
+    }
+  };
 
   const fetchCalendarData = async () => {
     try {
+      const route = useRoute();
+      const carName = route.params.carName;
+      const carRes = await axios.get(`http://127.0.0.1:8000/api/car/${carName}`);
+      const carId = carRes.data.id;
+
+
       const [calendarRes, reservationRes] = await Promise.all([
+        //get callendar info
         axios.get('http://127.0.0.1:8000/api/callendar'),
-        axios.get('http://127.0.0.1:8000/api/car/2/reservations') // second endpoint
+        axios.get(`http://127.0.0.1:8000/api/car/${carId}/reservations`) // second endpoint
       ]);
+
+
 
 
       monthAndDay.value = calendarRes.data.monthAndDay
@@ -142,10 +196,7 @@
       displayedMonth.value = currentMonth.value;
       displayedYear.value = currentYear.value;
 
-
-      console.log(reservationRes.data);
       // reserved day handler
-
 
       let reservedDays = [];
 
@@ -157,7 +208,7 @@
       // Remove duplicates
       reservedDays = [...new Set(reservedDays)];
       reserved.value = reservedDays;
-      console.log(reservedDays);
+      isCalendarReady.value = true;
     } catch (error) {
       console.error('Failed to fetch calendar data:', error)
     }
@@ -166,10 +217,6 @@
   onMounted(() => {
     fetchCalendarData()
   })
-
-
-
-
 
   //Create computed calendarDays
   const calendarDays = computed(() => {
@@ -183,19 +230,19 @@
         isCurrentMonth: false
       })
     }
-    //Current month days
 
-    console.log(reserved.value);
+
+    //Current month days
 
     for (let i=1; i<= daysOfMonth.value; i++) {
       const dayStr = i.toString().padStart(2, '0');
       const monthStr = displayedMonth.value.toString().padStart(2, '0');
       const dateStr = `${displayedYear.value}-${monthStr}-${dayStr}`;
-      console.log(dateStr)
       const isReserved = reserved.value.includes(dateStr)
 
       days.push({
         day: i,
+        date: dateStr,
         isCurrentMonth: true,
         isToday: i === currentDay.value,
         //   displayedMonth.value === currentMonth.value &&
@@ -203,8 +250,6 @@
         isReserved: isReserved,
       });
     }
-
-    console.log(days);
 
     // Fill with the days from next month
     const total = days.length;
