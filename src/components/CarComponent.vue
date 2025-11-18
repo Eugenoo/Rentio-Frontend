@@ -8,7 +8,7 @@
         {{ car.model }}
       </p>
       <div>
-        <img class="-right-30 mt-10 absolute top-0 object-cover p-12" :src="car.photo" />
+        <img class="-right-30 mt-10 absolute top-0 object-cover p-12 max-h-120" :src="car.photo" />
       </div>
     </div>
   </router-link>
