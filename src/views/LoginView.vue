@@ -1,10 +1,13 @@
 <template>
-login
-<AuthComponent></AuthComponent>
+  <div>
+    <NavBar />
+    <AuthLayout class="pt-16"></AuthLayout>
+  </div>
 </template>
 
 <script setup>
-import AuthComponent from "../components/Auth/AuthComponent.vue"
+import AuthLayout from "../components/Auth/AuthLayout.vue"
+import NavBar from '@/components/Navigation/NavBar.vue'
 </script>
 
 <style scoped>

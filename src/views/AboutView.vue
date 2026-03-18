@@ -1,15 +1,13 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <nav-bar></nav-bar>
+  <div class="about mt-20 ml-10">
+    <h1>We Are Renting Cars :)</h1>
   </div>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
+
 </style>
+<script setup lang="ts">
+import NavBar from '@/components/Navigation/NavBar.vue'
+</script>
