@@ -33,7 +33,7 @@ function createProduct()
         <p class="text-gray-500 mt-1">Manage your vehicles</p>
       </div>
       <button @click="showAddProductModal" class="p-3 rounded-xl italic font-bold cursor-pointer bg-black text-white hover:bg-gradient-to-r hover:from-slate-900 hover:via-teal-700 hover:to-emerald-600
-  transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30"> ADD NEW VEHICLE</button>
+  transition-all duration-300 hover:shadow-lg hover:shadow-emerald-500/30"> ADD NEW </button>
     </div>
     <product-list ref="productListRef"></product-list>
     <router-view></router-view>

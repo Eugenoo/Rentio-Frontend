@@ -181,7 +181,7 @@ function animateOpen() {
     ref="overlay"
     class="fixed inset-0 bg-black/40 backdrop-blur-md z-50 flex items-start justify-center p-10 overflow-y-auto"
   >
-    <div class="rounded-2xl max-w-6xl w-full max-h-[90vh] flex flex-col overflow-hidden">
+    <div class="rounded-2xl max-w-6xl w-full max-h-[90dvh] flex flex-col overflow-hidden">
       <!-- target element -->
       <div class="target" >
         <slot name="image" :closeImg="() => close(true)"/>
@@ -190,9 +190,11 @@ function animateOpen() {
       <transition name="panel-slide" class="h-screen">
         <div
           v-if="showContent"
-          class="bg-white mt-20 p-5 border-t border-gray-100 overflow-y-auto"
+          class="bg-white mt-20 p-5 border-t border-gray-100 mb-10"
         >
           <slot name="content" :close="close" />
+
+
         </div>
       </transition>
     </div>

@@ -81,11 +81,9 @@ const carRef = ref();
 
 onMounted(async () => {
   const carId = route.params.carName
-  console.log(carId);
   try {
     const res = await axios.get(`${import.meta.env.VITE_API_URL}`+`/api/car/`+ carId ) // ${carId}
     carRef.value = res.data
-    console.log(carRef.value)
     reservationStore.car = carRef.value.id
   } catch (error) {
     console.error(error);

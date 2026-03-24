@@ -75,7 +75,6 @@ async function fetchCategories() {
   await axios.get(`${import.meta.env.VITE_API_URL}`+'/api/carcategory')
     .then((response) => {
       categories.value = response.data
-      console.log(categories.value);
     })
     .catch(e => console.log(e))
 }

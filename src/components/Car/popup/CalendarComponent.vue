@@ -1,7 +1,7 @@
 <template>
-  <section class="relative py-8 md:py-16  sm:p-8">
+  <section class="relative">
 <!--CALENDAR-->
-    <div class="max-w-7xl mx-auto px-4 lg:px-8 xl:px-14">
+    <div class="max-w-7xl mx-auto lg:px-8 xl:px-14">
       <div class="flex items-center justify-between gap-3 md:mb-5">
         <div class="flex items-center gap-4">
           <h5 class="text-xl leading-8 font-semibold text-gray-900">{{ monthAndDay }}</h5>
@@ -68,7 +68,7 @@
             v-for="(day, index) in calendarDays"
             @click="selectDate(day)"
             :key="index"
-            class="p-3.5 xl:aspect-auto border-b border-r border-gray-200 flex justify-between flex-col max-lg:items-center min-h-[30px] md:min-h-[70px] transition-all duration-300 hover:bg-gray-100"
+            class="p-1 md:p-3.5 xl:aspect-auto border-b border-r border-gray-200 flex justify-between flex-col max-lg:items-center transition-all duration-300 hover:bg-gray-100"
             :class="{
               'bg-gray-50 hover:bg-gray-150': !day.isCurrentMonth,
               'bg-red-200 hover:bg-red-300': day.isReserved,
@@ -92,15 +92,36 @@
     </div>
     <div class="flex flex-col items-center gap-4 w-full p-5">
       <transition name="fade-pop" appear>
-        <div v-if="reservation.endDate" class="flex flex-col items-center gap-2">
-          <div>
-            <span class="font-bold text-xl">DAILY: </span>
-            <span class="font-bold text-xl">{{parseFloat(reservation.dailyPrice)}}  PLN   </span>
+        <div
+          v-if="reservation.endDate"
+          class="w-full max-w-md mx-auto p-5 rounded-2xl bg-white shadow-lg flex flex-col gap-4 items-center"
+        >
+
+          <!-- prices -->
+          <div class="w-full flex justify-between items-center">
+            <span class="text-gray-500 text-sm tracking-wide">Daily</span>
+            <span class="font-semibold text-lg">
+        {{ parseFloat(reservation.dailyPrice) }} PLN
+      </span>
           </div>
-          <div>
-            <span class="font-bold text-2xl">TOTAL: {{ parseFloat(reservation.totalPrice) }} PLN</span>
+
+          <div class="w-full border-t pt-3 flex justify-between items-center">
+            <span class="text-gray-800 font-semibold text-lg">Total</span>
+            <span class="font-bold text-2xl text-black">
+        {{ parseFloat(reservation.totalPrice) }} PLN
+      </span>
           </div>
-          <button class="gradient-border text-xl italic" @click="showBookingAuthModal()">RENT!</button>
+
+          <!-- button -->
+          <button
+            class="w-full py-3 rounded-xl text-white font-semibold text-lg
+             bg-gradient-to-r from-black to-gray-700
+             hover:scale-[1.02] active:scale-[0.98] transition"
+            @click="showBookingAuthModal()"
+          >
+            RENT NOW
+          </button>
+
         </div>
       </transition>
 

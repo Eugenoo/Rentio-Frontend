@@ -27,7 +27,7 @@
         <template #content="{ close }">
           <div class="flex flex-col h-full">
             <!-- scrollowalny content -->
-            <div class="flex-1 overflow-y-auto h-full">
+            <div class="flex-1 overflow-y-auto pb-24">
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
                 <CarComponent
                   v-for="car in filteredCars"
@@ -38,7 +38,7 @@
               </div>
             </div>
             <!-- footer -->
-            <div class="p-6 flex justify-center">
+            <div class="p-6 flex justify-center sticky bottom-0 bg-white z-10">
               <button
                 class="px-5 py-2 bg-black text-white rounded-lg"
                 @click="() => { close(); onModalClose(); }"
@@ -49,7 +49,7 @@
           </div>
         </template>
       </ExpandTransition>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 md:max-w-7xl mx-auto">
       <CarComponent
           v-for="car in cars"
           :key="car.id"
