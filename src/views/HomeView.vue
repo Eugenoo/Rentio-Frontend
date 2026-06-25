@@ -49,8 +49,14 @@
           </div>
         </template>
       </ExpandTransition>
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 md:max-w-7xl mx-auto">
-      <CarComponent
+
+
+      <div v-if="loading" class="flex justify-center py-20">
+        Loading...
+      </div>
+
+      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 md:max-w-7xl mx-auto">
+        <CarComponent
           v-for="car in cars"
           :key="car.id"
           :car="car"
@@ -64,26 +70,28 @@
 
 import CarComponent from "@/components/HomePage/CarComponent.vue";
 import { onMounted, computed, ref } from 'vue'
-import axios from 'axios'
 import NavBar from '@/components/Navigation/NavBar.vue'
 import CategorySection from '@/components/HomePage/Category/CategorySection.vue'
 import ExpandTransition from '@/components/ui/ExpandTransition.vue'
 import router from '@/router/index.js'
+import { useCarStore } from '@/stores/carStore.js'
+import { storeToRefs } from 'pinia'
 
-const cars = ref([]);
 
-onMounted(async() => {
-  try {
-    const res = await axios.get(import.meta.env.VITE_API_URL + '/api/car')
-    cars.value = res.data
-  } catch (error) {
-    console.log(error)
+
+const carStore = useCarStore()
+
+const { cars } = storeToRefs(carStore)
+
+onMounted(async () => {
+  if (!carStore.cars.length) {
+    console.log('fetching cars')
+    await carStore.fetchCars()
   }
 })
 
 const activeCategory = ref(null)
 const categorySectionRef = ref(null)
-const categorySectionRefTwo = ref(null)
 
 const expandRef = ref()
 

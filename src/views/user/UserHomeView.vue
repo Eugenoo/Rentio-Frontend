@@ -12,7 +12,8 @@
       ></aside-component>
 
       <!-- Main content -->
-      <main class="flex-1 bg-gray-50 overflow-x-hidden ml-12 sm:ml-64">
+      <main class="flex-1 bg-gray-50 ml-12 sm:ml-64">
+<!--        overflow-x-hidden-->
         <router-view></router-view>
       </main>
     </div>

@@ -190,7 +190,7 @@ function animateOpen() {
       <transition name="panel-slide" class="h-screen">
         <div
           v-if="showContent"
-          class="bg-white mt-20 p-5 border-t border-gray-100 mb-10"
+          class="bg-white mt-20 p-5 border-t rounded-2xl border-gray-100 mb-10"
         >
           <slot name="content" :close="close" />
 

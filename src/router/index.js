@@ -158,6 +158,7 @@ const router = createRouter({
       component: PaymentCompleteComponent
     }
   ],
+
 })
 
 router.beforeEach((to, from, next) => {
