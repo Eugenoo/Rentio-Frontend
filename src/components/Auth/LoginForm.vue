@@ -19,12 +19,17 @@ function onSubmit() {
       const token = response.data.access_token
       const user = response.data.user
 
+      console.log(user)
+
       //save token to store
       authStore.setToken(token)
       userStore.setUser(user)
 
       switch (user.role) {
         case 'admin':
+          router.push('/admin/dashboard') // ścieżka dla admina
+          break
+        case 'demo_admin':
           router.push('/admin/dashboard') // ścieżka dla admina
           break
         case 'user':
@@ -45,6 +50,17 @@ function onSubmit() {
       console.log(error.response.data)
     })
 }
+
+const loginAsDemo = async () => {
+  loginData.value = {
+    email: 'xpeke@gmail.com',
+    password: '12345678',
+    remember: false,
+  }
+
+  onSubmit()
+}
+
 </script>
 
 <template>
@@ -119,6 +135,7 @@ function onSubmit() {
         >
           Sign in
         </button>
+
         <p class="text-sm font-light text-gray-500">
           Don’t have an account yet?
           <a
@@ -128,6 +145,13 @@ function onSubmit() {
           >
         </p>
       </form>
+
+      <button
+        @click="loginAsDemo"
+        type="submit"
+        class="w-full cursor-pointer bg-yellow-600 text-white hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+      >
+        Sign in as Demo Administrator      </button>
     </div>
   </div>
 </template>

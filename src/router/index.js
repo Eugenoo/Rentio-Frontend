@@ -54,7 +54,7 @@ const router = createRouter({
       name: 'admin',
       redirect: '/admin/dashboard',
       component: AdminHomeView,
-      meta: {requiresAuth: true, roles: ['admin']},
+      meta: {requiresAuth: true, roles: ['admin', 'demo_admin']},
       children: [
         {
           path: 'products',

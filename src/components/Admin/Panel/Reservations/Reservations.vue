@@ -19,6 +19,7 @@
         <th class="px-6 py-3 hidden sm:table-cell">Start</th>
         <th class="px-6 py-3 hidden sm:table-cell">End</th>
         <th class="px-6 py-3 hidden sm:table-cell">Price</th>
+        <th class="px-6 py-3 hidden sm:table-cell">Time</th>
         <th class="px-6 py-3">Status</th>
         <th class="px-6 py-3 hidden sm:table-cell">Action</th>
       </tr>
@@ -82,6 +83,10 @@
           <!-- PRICE -->
           <td class="px-6 py-4 hidden sm:table-cell">
             ${{ reservation.total_price }}
+          </td>
+
+          <td class="px-6 py-4 hidden sm:table-cell">
+            created_at
           </td>
 
           <!-- STATUS -->
