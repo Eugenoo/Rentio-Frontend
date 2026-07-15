@@ -1,2 +1,43 @@
-@import "tailwindcss";
+@config "../../tailwind.config.js";
 
+@import "tailwindcss";
+@import 'tailwind-scrollbar-hide/v4';
+
+@import url('https://fonts.googleapis.com/css2?family=Saira:ital,wght@0,100..900;1,100..900&display=swap');
+
+body {
+  font-family: 'Saira', sans-serif;
+}
+
+/* Hide scrollbar - Chrome, Safari, Edge */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar - Firefox */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@layer utilities {
+  .card-wrapper {
+    @apply relative overflow-hidden rounded-2xl bg-gradient-to-b from-slate-700 to-slate-800;
+  }
+
+  .card-wrapper::before {
+    content: "";
+    @apply absolute inset-[-25%] animate-border-spin;
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      rgba(255, 19, 240) 0deg,
+      rgba(0, 138, 69) 60deg,
+      transparent 80deg,
+      transparent 360deg
+    );
+    z-index: -1;
+  }
+
+  .card-content {
+    @apply absolute inset-[5px] rounded-2xl bg-gradient-to-b from-slate-800 to-slate-900 flex items-center justify-center text-xs;
+  }
+}
