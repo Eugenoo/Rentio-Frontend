@@ -2,6 +2,7 @@
 import axios from 'axios'
 import { useUserStore } from '@/stores/user.js'
 import { useAuthStore } from '@/stores/auth.js'
+import { useNotify } from '@/composables/UseNotify.js'
 
 const authStore = useAuthStore();
 
@@ -12,6 +13,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const {notify} = useNotify()
 
 const emit = defineEmits(['close','update']);
 
@@ -30,6 +33,9 @@ async function destroyProduct() {
     emit('close');
   } catch (error) {
     console.error(error);
+    const msg = error.response?.data?.message
+    notify(msg, 'warning')
+    emit('close');
   }
 }
 

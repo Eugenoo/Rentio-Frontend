@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth.js'
+import { useNotify } from '@/composables/UseNotify.js'
 
 const authStore = useAuthStore()
 
@@ -10,6 +11,9 @@ const props = defineProps({
     required: true
   }
 })
+
+const {notify} = useNotify()
+
 
 const emit = defineEmits(['close', 'delete'])
 
@@ -28,7 +32,10 @@ async function destroyCategory() {
     emit('delete')
     emit('close')
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    const msg = error.response?.data?.message
+    notify(msg, 'warning')
+    emit('close');
   }
 }
 </script>

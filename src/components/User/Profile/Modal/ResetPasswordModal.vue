@@ -2,10 +2,13 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/user.js'
 import axios from '@/plugins/axios.js'
+import { useNotify } from '@/composables/UseNotify.js'
 
 const emit = defineEmits(['close']);
 const userStore = useUserStore();
 const errorValue = ref(null);
+
+const {notify} = useNotify();
 
 function sendResetLink() {
   console.log(userStore.user.email)
@@ -13,8 +16,12 @@ function sendResetLink() {
     {"email":userStore.user.email}, {withCredentials: true})
     .then(function(response) {
       console.log(response.data);
+      const msg = response.data?.message
+      notify(msg, 'success')
     }).catch(function(error){
     errorValue.value = error;
+    const msg = error.response?.data?.message
+    notify(msg, 'error')
   }).finally(() => {
     emit('close');
   })
