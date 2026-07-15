@@ -225,9 +225,7 @@ function showEditModal(item) {
 }
 
 function showDeleteModal(item) {
-  console.log(deleteCategory.value);
   deleteCategory.value = { ...item }
-  console.log(deleteCategory.value);
 }
 
 function closeEditModal() {

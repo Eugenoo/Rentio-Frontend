@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/stores/auth.js'
 import { useUserStore } from '@/stores/user.js'
+import { useNotify } from '@/composables/UseNotify.js'
 
 const authStore = useAuthStore()
 const userStore = useUserStore()
@@ -14,6 +15,8 @@ const userId = userStore.user.id
 const formData = ref({
   id: userId,
 })
+
+const {notify} = useNotify()
 
 async function submitForm() {
   try {
@@ -30,6 +33,9 @@ async function submitForm() {
     emit('close');
   } catch (error) {
     console.error(error);
+    const msg = error.response?.data?.message
+    notify(msg, 'warning')
+    emit('close');
   }
 }
 
