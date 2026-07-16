@@ -68,7 +68,7 @@
       <template v-for="item in categories" :key="item.id">
 
         <!-- MAIN ROW -->
-        <tr class="bg-white">
+        <tr class="bg-white hover:bg-gray-100">
 
           <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
             {{ item.name }}

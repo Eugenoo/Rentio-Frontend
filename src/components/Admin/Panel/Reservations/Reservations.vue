@@ -30,7 +30,7 @@
       <template v-for="reservation in reservations" :key="reservation.id">
 
         <!-- MAIN ROW -->
-        <tr class="bg-white">
+        <tr class="bg-white hover:bg-gray-100">
 
           <!-- PAYMENT -->
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
