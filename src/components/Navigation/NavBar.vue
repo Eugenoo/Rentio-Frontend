@@ -25,15 +25,54 @@
           </div>
         </div>
         <div v-if="isAuthenticated" class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-          <button type="button" class="relative rounded-full  p-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
+          <Menu as="div" class="relative">
+          <MenuButton type="button" class="relative rounded-full  p-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
             <span class="absolute -inset-1.5" />
             <span class="sr-only">View notifications</span>
             <span v-if="hasPending" id="red-dot-notification"
               class="absolute top-0 left-0 block h-2 w-2 rounded-full bg-red-500"
             ></span>
             <BellIcon class="size-6" aria-hidden="true" />
-          </button>
+          </MenuButton>
+            <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
+              <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-hidden">
 
+                <!-- Admin notification -->
+                <MenuItem
+                  v-if="role === 'admin' || role === 'demo_admin'"
+                  v-slot="{ active }"
+                >
+                  <router-link
+                    :to="{ name: 'admin.reservations' }"
+                    :class="[
+        active ? 'bg-gray-100 outline-hidden' : '',
+        'block px-4 py-2 text-sm text-gray-700'
+      ]"
+                  >
+                    New booking
+                  </router-link>
+                </MenuItem>
+
+
+                <!-- User notification -->
+                <MenuItem
+                  v-else
+                  v-slot="{ active }"
+                >
+                  <router-link
+                    :to="{ name: 'reservationDetails' }"
+                    :class="[
+        active ? 'bg-gray-100 outline-hidden' : '',
+        'block px-4 py-2 text-sm text-gray-700'
+      ]"
+                  >
+                    My reservations
+                  </router-link>
+                </MenuItem>
+
+              </MenuItems>
+            </transition>
+          </Menu>
           <!-- Profile dropdown -->
           <Menu as="div" class="relative ml-3">
             <div>
@@ -131,7 +170,7 @@ onMounted(async () => {
 })
 
 const profileRoute = computed(() => {
-  return user.role === 'admin'
+  return user.role === 'admin' || user.role === 'demo_admin'
     ? { name: 'admin.profile' }
     : { name: 'user.profile' };
 });

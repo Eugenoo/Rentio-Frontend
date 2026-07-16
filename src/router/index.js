@@ -79,6 +79,7 @@ const router = createRouter({
         },
         {
           path: 'reservations',
+          name: 'admin.reservations',
           component: Reservations
         },
         {
