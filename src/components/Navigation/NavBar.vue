@@ -99,11 +99,11 @@ const hasPending = ref();
 const route = useRoute()
 
 const navigation = [
-  { name: 'Home', route: '/', roles: ['guest', 'user', 'admin']},
+  { name: 'Home', route: '/', roles: ['guest', 'user', 'admin', 'demo_admin']},
   { name: 'Dashboard', route: '/user', roles: ['user']},
-  { name: 'About', route: '/about', roles: ['guest', 'user', 'admin']},
+  { name: 'About', route: '/about', roles: ['guest', 'user', 'admin', 'demo_admin']},
   { name: 'Login', route: '/login', roles: ['guest']},
-  { name: 'Admin', route: '/admin', roles: ['admin']},
+  { name: 'Admin', route: '/admin', roles: ['admin', 'demo_admin']},
 ];
 
 const navLinks = computed(() =>
