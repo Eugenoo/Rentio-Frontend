@@ -29,7 +29,6 @@ async function fetchDashboard() {
         }
       }
     )
-
     data.value = res.data
   } catch (err) {
     console.error(err)
