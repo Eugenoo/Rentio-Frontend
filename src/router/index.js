@@ -171,8 +171,6 @@ router.beforeEach((to) => {
   const authStore = useAuthStore();
   const userStore = useUserStore();
 
-  console.log(userStore.user)
-
   if (to.meta.requiresAuth && !authStore.accessToken) {
     return { name: 'login' };
   }

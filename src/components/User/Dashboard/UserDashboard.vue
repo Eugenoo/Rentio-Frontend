@@ -75,121 +75,73 @@ const toggleAccordion = (id) => {
     <div class="max-w-7xl">
       <div class="p-4 rounded-lg ">
         <div class="items-center justify-center mb-4 rounded-sm bg-gray-50">
-          <p class="text-2xl text-gray-500 ">
-              Upcoming Reservations:
+          <p class="text-2xl text-gray-500">
+            Upcoming Reservations:
           </p>
-            <div class="relative overflow-x-auto bg-neutral-primary-soft rounded-2xl shadow-sm">
-              <table class="w-full text-sm text-left rtl:text-right text-body">
-                <tbody>
-                <template
-                  v-for="reservation in upcomingReservation"
-                  :key="reservation.id"
-                >
 
-                  <!-- GŁÓWNY WIERSZ -->
-                  <tr class="bg-white rounded-2xl">
+          <!-- BRAK REZERWACJI -->
+          <div
+            v-if="!upcomingReservation || upcomingReservation.length === 0"
+            class="flex flex-col items-center justify-center py-10 text-center"
+          >
+            <p class="text-xl text-gray-500 mb-2">
+              It’s a bit empty here 👀
+            </p>
 
-                    <th class="px-2 py-2 font-medium text-heading whitespace-nowrap">
-                      {{ reservation.car.brand }} {{ reservation.car.model }}
-                    </th>
+            <p class="text-gray-400 mb-4">
+              Book a car and your upcoming reservations will appear here.
+            </p>
+            <router-link
+              to="/"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Book Now
+            </router-link>
+          </div>
 
-                    <td class="px-2 sm:px-6 py-4">
-                      {{ reservation.start_date }}
-                    </td>
+          <!-- LISTA REZERWACJI -->
+          <div
+            v-else
+            class="relative overflow-x-auto bg-neutral-primary-soft rounded-2xl shadow-sm"
+          >
+            <table class="w-full text-sm text-left rtl:text-right text-body">
+              <tbody>
+              <template
+                v-for="reservation in upcomingReservation"
+                :key="reservation.id"
+              >
+                <!-- tutaj zostaje cała Twoja obecna tabela -->
+              </template>
+              </tbody>
+            </table>
 
-                    <td class="px-2 sm:px-6 py-4">
-                      {{ reservation.end_date }}
-                    </td>
-
-                    <!-- STRZAŁKA -->
-                    <td class="px-2 sm:px-6 py-4 md:hidden">
-                      <button @click="toggleAccordion(reservation.id)">
-                        <svg
-                          class="size-6 transition-transform duration-300"
-                          :class="{ 'rotate-180': expandedRow === reservation.id }"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                        </svg>
-                      </button>
-                    </td>
-
-                    <!-- DESKTOP -->
-                    <td class="px-2 sm:px-6 py-4 hidden sm:table-cell">
-                      {{ reservation.total_price }}
-                    </td>
-
-                    <td class="px-6 py-4 hidden sm:table-cell">
-                      {{ reservation.status }}
-                    </td>
-
-                    <td class="px-6 py-4 hidden sm:table-cell">
-                      Cancell
-                    </td>
-
-                    <td class="px-6 py-4 hidden sm:table-cell">
-                      Contact
-                    </td>
-
-                    <td class="px-6 py-4 hidden sm:table-cell">
-                    <span v-if="reservation.latest_payment">
-                      <router-link to="payments">Paid</router-link>
-                    </span>
-                      <button
-                        v-else
-                        class="text-blue-600 hover:underline"
-                        @click="showPaymentModal(reservation)"
-                      >
-                        Pay
-                      </button>
-                    </td>
-                  </tr>
-                  <!-- ROZWIJANY WIERSZ (MOBILE) -->
-                  <tr
-                    v-if="expandedRow === reservation.id"
-                    class="bg-white sm:hidden"
-                  >
-                    <td colspan="100%" class="p-4">
-                      <div class="space-y-2 text-sm">
-                        <p><strong>Total:</strong> {{ reservation.total_price }}</p>
-                        <p><strong>Status:</strong> {{ reservation.status }}</p>
-                        <div>
-                        <span v-if="reservation.latest_payment">
-                          <router-link to="payments">Paid</router-link>
-                        </span>
-                          <button
-                            v-else
-                            class="text-blue-600"
-                            @click="showPaymentModal(reservation)"
-                          >
-                            Pay
-                          </button>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                </template>
-                </tbody>
-              </table>
-              <router-link to="reservations" class="font-medium">
-                  <div class="flex justify-center p-2 hover:bg-gray-100">
-                    <span>
-                      MORE
-                    </span>
-                  </div>
-              </router-link>
-            </div>
+            <router-link to="reservations" class="font-medium">
+              <div class="flex justify-center p-2 hover:bg-gray-100">
+        <span>
+          MORE
+        </span>
+              </div>
+            </router-link>
+          </div>
         </div>
         <div class="items-center justify-center border-dashed mb-4 rounded-sm bg-gray-50">
           <p class="text-2xl text-gray-400 dark:text-gray-500">
             Newest Reservations:
           </p>
 
-          <div class="relative overflow-x-auto bg-neutral-primary-soft shadow-sm rounded-2xl">
+          <!-- BRAK REZERWACJI -->
+          <div
+            v-if="!newestReservations || newestReservations.length === 0"
+            class="flex flex-col items-center justify-center py-10 text-center"
+          >
+
+          </div>
+
+          <!-- LISTA REZERWACJI -->
+          <div
+            v-else
+            class="relative overflow-x-auto bg-neutral-primary-soft shadow-sm rounded-2xl"
+          >
             <table class="w-full text-sm text-left rtl:text-right text-body">
               <tbody>
 
@@ -198,109 +150,18 @@ const toggleAccordion = (id) => {
                 :key="reservation.id"
               >
 
-                <!-- GŁÓWNY WIERSZ -->
-                <tr class="bg-white">
-
-                  <th class="px-2 py-2 font-medium text-heading whitespace-nowrap">
-                    {{ reservation.car.brand }} {{ reservation.car.model }}
-                  </th>
-
-                  <td class="px-2 sm:px-6 py-4">
-                    {{ reservation.start_date }}
-                  </td>
-
-                  <td class="px-2 sm:px-6 py-4">
-                    {{ reservation.end_date }}
-                  </td>
-
-                  <!-- STRZAŁKA (MOBILE) -->
-                  <td class="px-2 sm:px-6 py-4 md:hidden">
-                    <button @click="toggleAccordion(reservation.id)">
-                      <svg
-                        class="size-6 transition-transform duration-300"
-                        :class="{ 'rotate-180': expandedRow === reservation.id }"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                      </svg>
-                    </button>
-                  </td>
-
-                  <!-- DESKTOP -->
-                  <td class="px-2 sm:px-6 py-4 hidden sm:table-cell">
-                    {{ reservation.total_price }}
-                  </td>
-
-                  <td class="px-6 py-4 hidden sm:table-cell">
-                    {{ reservation.status }}
-                  </td>
-
-                  <td class="px-6 py-4 hidden sm:table-cell">
-                    Cancell
-                  </td>
-
-                  <td class="px-6 py-4 hidden sm:table-cell">
-                    Contact
-                  </td>
-
-                  <td class="px-6 py-4 hidden sm:table-cell">
-            <span v-if="reservation.latest_payment">
-              <router-link to="payments">Paid</router-link>
-            </span>
-
-                    <button
-                      v-else
-                      class="text-blue-600 hover:underline"
-                      @click="showPaymentModal(reservation)"
-                    >
-                      Pay
-                    </button>
-                  </td>
-                </tr>
-
-                <!-- ROZWIJANY WIERSZ (MOBILE) -->
-                <tr
-                  v-if="expandedRow === reservation.id"
-                  class="bg-white sm:hidden"
-                >
-                  <td colspan="100%" class="p-4">
-                    <div class="space-y-2 text-sm">
-                      <p><strong>Total:</strong> {{ reservation.total_price }}</p>
-                      <p><strong>Status:</strong> {{ reservation.status }}</p>
-
-                      <div>
-                <span v-if="reservation.latest_payment">
-                  <router-link to="payments">Paid</router-link>
-                </span>
-
-                        <button
-                          v-else
-                          class="text-blue-600"
-                          @click="showPaymentModal(reservation)"
-                        >
-                          Pay
-                        </button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
               </template>
 
               </tbody>
             </table>
+
             <router-link to="reservations" class="font-medium">
               <div class="flex justify-center p-2 hover:bg-gray-100">
-                  MORE
+                MORE
               </div>
             </router-link>
           </div>
-        </div>
-      </div>
+        </div>      </div>
     </div>
   </section>
 </template>
