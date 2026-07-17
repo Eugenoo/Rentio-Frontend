@@ -69,6 +69,7 @@ import axios from 'axios'
 import { useUserStore } from '@/stores/user.js'
 import { useAuthStore } from '@/stores/auth.js'
 import router from '@/router/index.js'
+import { useNotify } from '@/composables/UseNotify.js'
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -80,18 +81,25 @@ const form = reactive({
   phone: '',
 });
 
+const {notify} = useNotify();
+
 const isSubmitting = ref(false);
 
 async function updateData() {
-  await  axios.put(`${import.meta.env.VITE_API_URL}`+'/api/user', form, {
+  await  axios.patch(`${import.meta.env.VITE_API_URL}`+'/api/me/complete-profile', form, {
       headers: {
         Authorization: `bearer ${authStore.accessToken}`,
       },
     }
   ).then(response => {
-    console.log(response);
-    router.push({ path: '/user' });
+    userStore.setUser(response.data.user);
+    const msg = response.data.message
+    console.log(msg);
+    notify(msg, 'success')
+    router.push({ name: 'user' });
   }).catch(err => {
+    const msg = err.response?.data?.message
+    notify(msg, 'error')
     console.log(err);
   });
 }
@@ -100,7 +108,7 @@ function submitForm() {
   isSubmitting.value = true;
 
   // TODO: API call
-  updateData();
+  updateData();git
 
   setTimeout(() => {
     isSubmitting.value = false;
