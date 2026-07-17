@@ -1,4 +1,5 @@
 <template>
+  <nav-bar></nav-bar>
   <div class="min-h-screen flex items-center justify-center bg-gray-50">
     <div class="w-full max-w-md bg-white rounded-xl shadow p-6">
       <h1 class="text-2xl font-semibold mb-6 text-gray-800">
@@ -70,6 +71,7 @@ import { useUserStore } from '@/stores/user.js'
 import { useAuthStore } from '@/stores/auth.js'
 import router from '@/router/index.js'
 import { useNotify } from '@/composables/UseNotify.js'
+import NavBar from '@/components/Navigation/NavBar.vue'
 
 const userStore = useUserStore();
 const authStore = useAuthStore();
@@ -94,7 +96,6 @@ async function updateData() {
   ).then(response => {
     userStore.setUser(response.data.user);
     const msg = response.data.message
-    console.log(msg);
     notify(msg, 'success')
     router.push({ name: 'user' });
   }).catch(err => {
@@ -108,7 +109,7 @@ function submitForm() {
   isSubmitting.value = true;
 
   // TODO: API call
-  updateData();git
+  updateData();
 
   setTimeout(() => {
     isSubmitting.value = false;

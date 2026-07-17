@@ -3,10 +3,12 @@ import {ref} from "vue";
 import { useUserStore } from "@/stores/user.js";
 import axios from "@/plugins/axios.js";
 import { useRouter} from 'vue-router';
+import { useAuthStore } from '@/stores/auth.js'
 
 const registerData = ref({});
 const errorValue = ref();
 const userStore = useUserStore();
+const authStore = useAuthStore();
 const router = useRouter();
 
 const emit = defineEmits(['login', 'forgotPassword']);
@@ -17,8 +19,9 @@ function onSubmit() {
       const token = response.data.access_token;
       const user = response.data.user;
       //save token to store
-      userStore.setAuthData({token,user});
-      router.push('/user');
+      userStore.setUser(user);
+      authStore.setToken(token);
+      router.replace('/user')
     }).catch(function(error){
     errorValue.value = error;
   })
