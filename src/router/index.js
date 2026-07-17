@@ -142,16 +142,21 @@ const router = createRouter({
           name: 'calendarDetails',
           component: UserCalendar,
         },
-        {
-          path: 'completeProfile',
-          name: 'completeProfile',
-          component: CompleteProfile,
-        }
+        // {
+        //   path: 'completeProfile',
+        //   name: 'completeProfile',
+        //   component: CompleteProfile,
+        // }
       ]
     },
     {
       path: '/reset-password/:token',
       component: ResetPasswordView
+    },
+    {
+      path: '/user/completeProfile',
+      name: 'completeProfile',
+      component: CompleteProfile,
     },
     {
       path: '/payment/complete',
@@ -162,18 +167,26 @@ const router = createRouter({
 
 })
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const authStore = useAuthStore();
   const userStore = useUserStore();
-  const userRole = userStore.role;
 
-  if(to.meta.requiresAuth && !authStore.accessToken) {
-    return next({name: 'login'});
+  console.log(userStore.user)
+
+  if (to.meta.requiresAuth && !authStore.accessToken) {
+    return { name: 'login' };
   }
-  if (to.meta.roles && !to.meta.roles.includes(userRole)) {
-    return next({ name: 'login' });
+
+  if (to.meta.roles && !to.meta.roles.includes(userStore.role)) {
+    return { name: 'login' };
   }
-  next();
-})
+  if (
+    userStore.user &&
+    !userStore.user.profile_completed &&
+    to.name !== 'completeProfile'
+  ) {
+    return { name: 'completeProfile' };
+  }
+});
 
 export default router
