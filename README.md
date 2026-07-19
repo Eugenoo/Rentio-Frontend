@@ -140,7 +140,7 @@ VITE_API_URL=http://localhost:8000/api
 ## Funkcjonalności
 
 - logowanie użytkowników,
-- zarządzanie najmem nieruchomości,
+- zarządzanie najmem pojazdów,
 - komunikacja z backendem przez REST API,
 - routing pomiędzy widokami,
 - zarządzanie stanem aplikacji przy użyciu Pinia,
